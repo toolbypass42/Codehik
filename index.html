@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOOL ACCESS PANEL</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+  }
+
+  body {
+    min-height: 100vh;
+    background: #000;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 0, 128, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
+    color: #ff0080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Hiệu ứng lưới nền */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 0, 128, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 0, 128, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 520px;
+    background: rgba(10, 0, 5, 0.85);
+    border: 2px solid #ff0080;
+    border-radius: 12px;
+    padding: 40px 30px;
+    box-shadow: 
+      0 0 30px rgba(255, 0, 128, 0.5),
+      inset 0 0 30px rgba(255, 0, 128, 0.1);
+    text-align: center;
+    animation: glow 2.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 20px rgba(255, 0, 128, 0.4), inset 0 0 20px rgba(255, 0, 128, 0.08); }
+    to   { box-shadow: 0 0 45px rgba(255, 0, 128, 0.8), inset 0 0 35px rgba(255, 0, 128, 0.15); }
+  }
+
+  .header {
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: #ff0080;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 
+      0 0 10px #ff0080,
+      0 0 20px #ff0080,
+      0 0 40px #ff0080;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    animation: flicker 3s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 92%, 100% { opacity: 1; }
+    93%, 95% { opacity: 0.4; }
+    94% { opacity: 1; }
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #ff69b4;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+  }
+
+  .terminal-line {
+    font-size: 12px;
+    color: #ff69b4;
+    text-align: left;
+    margin-bottom: 25px;
+    padding: 12px;
+    background: rgba(255, 0, 128, 0.05);
+    border-left: 2px solid #ff0080;
+    border-radius: 4px;
+    min-height: 40px;
+  }
+
+  .terminal-line::before {
+    content: '> ';
+    color: #ff0080;
+    font-weight: bold;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: #ff0080;
+    margin-left: 2px;
+    animation: blink 1s steps(2) infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #ff0080;
+  }
+
+  .btn-main {
+    background: linear-gradient(135deg, #ff0080, #b3005a);
+    color: #000;
+    box-shadow: 0 0 20px rgba(255, 0, 128, 0.6);
+  }
+
+  .btn-main:hover {
+    background: linear-gradient(135deg, #ff3399, #ff0080);
+    box-shadow: 0 0 35px rgba(255, 0, 128, 1);
+    transform: translateY(-2px);
+  }
+
+  .btn-backup {
+    background: transparent;
+    color: #ff0080;
+    box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+  }
+
+  .btn-backup:hover {
+    background: rgba(255, 0, 128, 0.15);
+    box-shadow: 0 0 25px rgba(255, 0, 128, 0.8);
+    transform: translateY(-2px);
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn:hover::after {
+    left: 100%;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 25px 0 20px;
+    color: #ff69b4;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ff0080, transparent);
+  }
+
+  .footer {
+    margin-top: 25px;
+    font-size: 10px;
+    color: #ff69b4;
+    opacity: 0.6;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 8px #00ff88;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @media (max-width: 480px) {
+    .title { font-size: 24px; }
+    .container { padding: 30px 20px; }
+    .btn { font-size: 13px; padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">◤ TOOL ACCESS ◢</div>
+    <h1 class="title">TOOL PANEL</h1>
+    <p class="subtitle">🚀 Kết nối ổn định • Tốc độ cao</p>
+
+    <div class="terminal-line">
+      <span id="typing"></span><span class="cursor"></span>
+    </div>
+
+    <a href="https://phienchoso.com/8f0d346e3acb6858782c.rv" class="btn btn-main" target="_blank" rel="noopener">
+      ⚡ LINK CHÍNH TOOL
+    </a>
+
+    <div class="divider">DỰ PHÒNG</div>
+
+    <a href="https://sitetop.net/LWCsE7" class="btn btn-backup" target="_blank" rel="noopener">
+      🔗 LINK BACKUP (Khi lỗi)
+    </a>
+
+    <div class="footer">
+      <span class="status"></span>SYSTEM ONLINE<br>
+      © 2025 — ACCESS GRANTED
+    </div>
+  </div>
+
+  <script>
+    // Hiệu ứng gõ chữ
+    const messages = [
+      "Initializing tool engine...",
+      "Loading modules...",
+      "Connection established ✓",
+      "Tool ready. Click to access."
+    ];
+    
+    const typingEl = document.getElementById('typing');
+    let msgIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    function type() {
+      const current = messages[msgIndex];
+      
+      if (!deleting) {
+        typingEl.textContent = current.substring(0, ++charIndex);
+        if (charIndex === current.length) {
+          deleting = true;
+          setTimeout(type, 1800);
+          return;
+        }
+      } else {
+        typingEl.textContent = current.substring(0, --charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          msgIndex = (msgIndex + 1) % messages.length;
+        }
+      }
+      setTimeout(type, deleting ? 40 : 80);
+    }
+
+    type();
+
+    // Hiệu ứng vệt sáng di chuyển theo chuột
+    document.addEventListener('mousemove', (e) => {
+      const container = document.querySelector('.container');
+      const rect = container.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      container.style.background = 
+        `radial-gradient(circle at ${x}% ${y}%, rgba(255, 0, 128, 0.12), rgba(10, 0, 5, 0.9) 60%)`;
+    });
+  </script>
+
+</body>
+</html>
